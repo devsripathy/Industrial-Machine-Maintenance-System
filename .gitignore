@@ -1,0 +1,33 @@
+# Visual Studio/dotnet
+bin/
+obj/
+*.user
+*.userosscache
+*.sln.docstates
+.vs/
+.idea/
+.vscode/
+
+# Node
+node_modules/
+dist/
+build/
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Docker
+docker/data/
+docker/mysql/
+mysql-data/
+
+# OS-specific
+Thumbs.db
+Desktop.ini
+.DS_Store
