@@ -27,6 +27,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<User> Users => Set<User>();
     public DbSet<Role> Roles => Set<Role>();
     public DbSet<Permission> Permissions => Set<Permission>();
+    public DbSet<WorkOrder> WorkOrders => Set<WorkOrder>();
     public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -122,6 +123,34 @@ public class ApplicationDbContext : DbContext
                     "role_permissions",
                     j => j.HasOne<Role>().WithMany().HasForeignKey("RoleId").OnDelete(DeleteBehavior.Cascade),
                     j => j.HasOne<Permission>().WithMany().HasForeignKey("PermissionId").OnDelete(DeleteBehavior.Cascade));
+        });
+
+        // WorkOrder
+        modelBuilder.Entity<WorkOrder>(entity =>
+        {
+            entity.ToTable("work_orders");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Title).IsRequired().HasMaxLength(150);
+            entity.Property(e => e.Description).IsRequired().HasMaxLength(1000);
+            entity.Property(e => e.FailureCode).HasMaxLength(80);
+            entity.Property(e => e.RootCause).HasMaxLength(500);
+            entity.Property(e => e.ResolutionNotes).HasMaxLength(1000);
+            entity.Property(e => e.ChecklistJson).HasColumnType("json");
+
+            entity.HasOne(d => d.Machine)
+                .WithMany()
+                .HasForeignKey(d => d.MachineId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(d => d.RequestedByUser)
+                .WithMany()
+                .HasForeignKey(d => d.RequestedByUserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(d => d.AssignedToUser)
+                .WithMany()
+                .HasForeignKey(d => d.AssignedToUserId)
+                .OnDelete(DeleteBehavior.SetNull);
         });
 
         // AuditLog

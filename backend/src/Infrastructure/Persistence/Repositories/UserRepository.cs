@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -27,6 +27,7 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .Include(u => u.Role)
+            .ThenInclude(r => r.Permissions)
             .FirstOrDefaultAsync(u => u.Username == username);
     }
 
@@ -34,6 +35,7 @@ public class UserRepository : IUserRepository
     {
         return await _context.Users
             .Include(u => u.Role)
+            .ThenInclude(r => r.Permissions)
             .FirstOrDefaultAsync(u => u.Email == email);
     }
 
@@ -53,6 +55,7 @@ public class UserRepository : IUserRepository
             .Where(u => u.Id == userId)
             .SelectMany(u => u.Role.Permissions)
             .Select(p => p.Name)
+            .Distinct()
             .ToListAsync();
     }
 }

@@ -1,10 +1,10 @@
-version: '3.8'
+﻿version: '3.8'
 
 services:
   mysql-db:
     image: mysql:8.0
     container_name: sentinelops-mysql
-    restart: always
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: sentinelops_db
       MYSQL_ROOT_PASSWORD: root_password_123
@@ -12,8 +12,33 @@ services:
       MYSQL_PASSWORD: user_password_123
     ports:
       - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot_password_123"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     volumes:
       - mysql-data:/var/lib/mysql
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sentinelops-backend
+    restart: unless-stopped
+    depends_on:
+      mysql-db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Server=mysql-db;Port=3306;Database=sentinelops_db;Uid=sentinelops_user;Pwd=user_password_123;AllowPublicKeyRetrieval=True;SslMode=Preferred;
+      Jwt__Secret: SentinelOpsSuperSecretKey123!@#ChangeMeInProd
+      Jwt__Issuer: SentinelOpsAPI
+      Jwt__Audience: SentinelOpsClient
+      Jwt__ExpiryMinutes: 60
+    ports:
+      - "5050:8080"
 
 volumes:
   mysql-data:
