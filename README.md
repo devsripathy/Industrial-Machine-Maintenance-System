@@ -180,16 +180,10 @@ Industrial-Machine-Maintenance-System/
 
 ---
 
-## 🤝 Contributing
-
-This project is under active early-stage development. Issues and pull requests are welcome — please open an issue first for significant changes so scope and architecture direction can be discussed before implementation.
-
----
 
 ## 📄 License
 
-No license has been declared for this repository yet. Until a `LICENSE` file is added, default copyright applies and the code is **not** open for reuse or redistribution. If this is meant to be open source, adding an [MIT](https://choosealicense.com/licenses/mit/) or [Apache 2.0](https://choosealicense.com/licenses/apache-2.0/) license is recommended.
-
+No license has been declared for this repository yet. Until a `LICENSE` file is added, default copyright applies and the code is **not** open for reuse or redistribution.
 ---
 
 <p align="center">Built with .NET 9 and Clean Architecture — maintenance intelligence, done properly.</p>
