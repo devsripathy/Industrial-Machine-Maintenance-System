@@ -27,7 +27,14 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         var audience = _configuration["Jwt:Audience"] ?? "SentinelOpsClient";
         var expiryMinutes = double.Parse(_configuration["Jwt:ExpiryMinutes"] ?? "60");
 
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
+        var signingKey = Encoding.UTF8.GetBytes(secret);
+        if (signingKey.Length < 32)
+        {
+            using var sha256 = SHA256.Create();
+            signingKey = sha256.ComputeHash(signingKey);
+        }
+
+        var key = new SymmetricSecurityKey(signingKey);
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>

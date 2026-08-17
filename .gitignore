@@ -22,6 +22,12 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Database artifacts
+*.db
+*.db-shm
+*.db-wal
+logs/
+
 # Docker
 docker/data/
 docker/mysql/
